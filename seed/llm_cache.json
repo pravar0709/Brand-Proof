@@ -1,0 +1,3 @@
+{
+  "_note": "Pre-populated LLM cache so sample drafts work without an API key. Keys are sha256(normalised_sentence + source_ids)."
+}
