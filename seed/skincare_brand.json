@@ -1,0 +1,198 @@
+{
+  "brand": "GlowLeaf",
+  "tagline": "Nature-powered skincare, science-backed results",
+  "rules": [
+    {
+      "code": "R1",
+      "title": "Brand Voice – Friendly & Factual",
+      "text": "All GlowLeaf communications must use a friendly, factual, and approachable tone. Never use aggressive, confrontational, or fear-based language. Avoid exclamation marks in excess (max 1 per paragraph). Never use ALL CAPS for emphasis.",
+      "category": "tone",
+      "severity": "high"
+    },
+    {
+      "code": "R2",
+      "title": "No Absolute or Guarantee Language",
+      "text": "Do not use absolute or guarantee language such as 'guaranteed', '100%', 'miracle', 'forever', 'permanent', 'absolutely', 'always works', or 'never fails'. These create unrealistic expectations and potential legal liability.",
+      "category": "claims",
+      "severity": "high"
+    },
+    {
+      "code": "R3",
+      "title": "No Unsupported Superlative or Ranking Claims",
+      "text": "Do not use superlative or ranking claims such as '#1', 'best', 'world's', 'leading', 'top-rated', 'number one', or 'most popular' unless the specific claim is listed and active in the Claim Ledger with supporting evidence.",
+      "category": "claims",
+      "severity": "high"
+    },
+    {
+      "code": "R4",
+      "title": "No Unsupported Medical Claims",
+      "text": "Do not use medical or clinical language such as 'clinically proven', 'cures', 'treats', 'heals', 'prescription-strength', 'doctor-recommended', or 'medically tested' unless the specific claim is listed and active in the Claim Ledger with supporting clinical evidence.",
+      "category": "claims",
+      "severity": "high"
+    },
+    {
+      "code": "R5",
+      "title": "Sunscreen Reapplication Reminder",
+      "text": "Any content mentioning sunscreen, SPF, or sun protection must always include the reminder to 'reapply every 2 hours'. This is a regulatory and safety requirement and must not be omitted.",
+      "category": "claims",
+      "severity": "high"
+    },
+    {
+      "code": "R6",
+      "title": "Preferred Term: Sun Protection",
+      "text": "Use the term 'sun protection' instead of 'sun block' or 'sunblock'. The term 'sun block' implies complete blocking of UV rays, which is misleading. Always use 'sun protection' or 'sunscreen'.",
+      "category": "terminology",
+      "severity": "medium"
+    },
+    {
+      "code": "R7",
+      "title": "Brand Name Spelling",
+      "text": "Always write the brand name as 'GlowLeaf' (one word, capital G and L). Never write it as 'Glow Leaf', 'glowleaf', 'glow leaf', 'GLOWLEAF', or 'Glowleaf'.",
+      "category": "terminology",
+      "severity": "high"
+    },
+    {
+      "code": "R8",
+      "title": "Hashtag Accessibility – CamelCase",
+      "text": "All hashtags must use CamelCase (e.g., #GlowLeaf, #SunProtection) for screen reader accessibility. Never use all-lowercase hashtags (e.g., #glowleaf) or all-uppercase hashtags.",
+      "category": "accessibility",
+      "severity": "medium"
+    },
+    {
+      "code": "R9",
+      "title": "Emoji Usage Limits",
+      "text": "Use a maximum of 2 emojis per social media post or caption. Emojis must never replace words in a sentence. They should only be used as decorative accents at the end of sentences or as bullet markers.",
+      "category": "formatting",
+      "severity": "medium"
+    },
+    {
+      "code": "R10",
+      "title": "No Competitor Comparisons",
+      "text": "Never name or directly reference competitor brands in any marketing content. Do not use comparative language that implies superiority over a named competitor. Generic comparisons ('unlike typical sunscreens') are acceptable.",
+      "category": "claims",
+      "severity": "high"
+    },
+    {
+      "code": "R11",
+      "title": "Discount Copy Must State End Date",
+      "text": "All promotional or discount copy must clearly state the offer end date. Never use open-ended discount language like 'limited time offer' without specifying when the offer expires.",
+      "category": "claims",
+      "severity": "medium"
+    },
+    {
+      "code": "R12",
+      "title": "Sentence Length – Readability",
+      "text": "Keep sentences concise. Average sentence length should be under 25 words. Break up long sentences for readability, especially on mobile devices.",
+      "category": "formatting",
+      "severity": "low"
+    },
+    {
+      "code": "R13",
+      "title": "No Fear-Based Language",
+      "text": "Avoid fear-based or anxiety-inducing language such as 'dangerous', 'toxic', 'poison', 'harmful chemicals', 'skin damage', 'aging skin', or 'wrinkles will worsen'. Focus on positive outcomes rather than negative consequences.",
+      "category": "tone",
+      "severity": "high"
+    },
+    {
+      "code": "R14",
+      "title": "Ingredient Claims Must Match Ledger",
+      "text": "Any claims about specific ingredients (concentrations, sourcing, properties) must match the ingredient information listed in the Claim Ledger. Do not make ingredient claims that are not supported by a Ledger entry.",
+      "category": "claims",
+      "severity": "high"
+    }
+  ],
+  "ledger": [
+    {
+      "claim": "SPF 50 broad-spectrum sunscreen",
+      "evidence": "Lab test report #GL-SPF-2024-003 certified by NABL-accredited laboratory. SPF 50 protection with broad-spectrum UVA/UVB coverage. Reapply every 2 hours for continued protection.",
+      "allowed_wording": "SPF 50 broad-spectrum sun protection. Reapply every 2 hours.",
+      "owner": "GlowLeaf",
+      "expires_on": "2027-12-31",
+      "status": "active"
+    },
+    {
+      "claim": "Dermatologist-tested on 120 volunteers",
+      "evidence": "Independent dermatological study conducted by SkinSafe Labs, 2024. Tested on 120 volunteers over 8 weeks. Results showed improved skin hydration in 89% of participants.",
+      "allowed_wording": "Dermatologist-tested. Tested on 120 volunteers with positive results.",
+      "owner": "GlowLeaf",
+      "expires_on": "2027-06-30",
+      "status": "active"
+    },
+    {
+      "claim": "Fragrance-free formulation",
+      "evidence": "Product formulation document GL-FORM-2024. No synthetic or natural fragrances added. Certified fragrance-free by IFRA standards.",
+      "allowed_wording": "Fragrance-free. No added synthetic or natural fragrances.",
+      "owner": "GlowLeaf",
+      "expires_on": "2027-12-31",
+      "status": "active"
+    },
+    {
+      "claim": "Contains 2% niacinamide",
+      "evidence": "Product formulation document GL-FORM-2024. Active ingredient: Niacinamide at 2% concentration. Helps improve skin texture and minimise pores.",
+      "allowed_wording": "Contains 2% niacinamide for improved skin texture.",
+      "owner": "GlowLeaf",
+      "expires_on": "2027-12-31",
+      "status": "active"
+    },
+    {
+      "claim": "Water-resistant for 40 minutes",
+      "evidence": "Lab test report #GL-WR-2024-001. Water resistance tested per FDA protocol. Maintains SPF protection for 40 minutes of water activity.",
+      "allowed_wording": "Water-resistant for up to 40 minutes. Reapply after swimming or heavy perspiration.",
+      "owner": "GlowLeaf",
+      "expires_on": "2027-12-31",
+      "status": "active"
+    },
+    {
+      "claim": "Cruelty-free certified",
+      "evidence": "Leaping Bunny certification #LB-2024-GL-0891. No animal testing at any stage of product development or manufacturing.",
+      "allowed_wording": "Cruelty-free. Leaping Bunny certified. No animal testing.",
+      "owner": "GlowLeaf",
+      "expires_on": "2027-03-31",
+      "status": "active"
+    },
+    {
+      "claim": "Free shipping across India on orders above Rs 499",
+      "evidence": "Promotional offer approved by Marketing Head. Valid for Diwali sale period only.",
+      "allowed_wording": "Free shipping across India on orders above Rs 499.",
+      "owner": "GlowLeaf",
+      "expires_on": "2025-11-15",
+      "status": "expired"
+    },
+    {
+      "claim": "Vegan formula",
+      "evidence": "Product formulation document GL-FORM-2024. No animal-derived ingredients. Certified vegan by The Vegan Society.",
+      "allowed_wording": "100% vegan formula. Certified by The Vegan Society.",
+      "owner": "GlowLeaf",
+      "expires_on": "2027-12-31",
+      "status": "active"
+    },
+    {
+      "claim": "Recyclable packaging",
+      "evidence": "Packaging specification GL-PKG-2024. All primary packaging made from post-consumer recycled HDPE plastic. Recyclable in standard municipal recycling programs.",
+      "allowed_wording": "Packaged in recyclable materials made from post-consumer recycled plastic.",
+      "owner": "GlowLeaf",
+      "expires_on": "2027-12-31",
+      "status": "active"
+    },
+    {
+      "claim": "Suitable for sensitive skin",
+      "evidence": "Dermatological patch test report #GL-SENS-2024-002. Tested on 80 volunteers with sensitive skin. Zero irritation reactions reported. Hypoallergenic formulation.",
+      "allowed_wording": "Suitable for sensitive skin. Dermatologically tested. Hypoallergenic.",
+      "owner": "GlowLeaf",
+      "expires_on": "2027-06-30",
+      "status": "active"
+    }
+  ],
+  "terms": [
+    {"term": "sun block", "kind": "banned", "replacement": "sun protection", "rule_code": "R6"},
+    {"term": "sunblock", "kind": "banned", "replacement": "sun protection", "rule_code": "R6"},
+    {"term": "miracle", "kind": "banned", "replacement": "", "rule_code": "R2"},
+    {"term": "anti-aging", "kind": "banned", "replacement": "age-defying", "rule_code": "R13"},
+    {"term": "whitening", "kind": "banned", "replacement": "brightening", "rule_code": "R13"},
+    {"term": "chemical-free", "kind": "banned", "replacement": "gentle formula", "rule_code": "R14"},
+    {"term": "Glow Leaf", "kind": "banned", "replacement": "GlowLeaf", "rule_code": "R7"},
+    {"term": "sun protection", "kind": "preferred", "replacement": "", "rule_code": "R6"},
+    {"term": "brightening", "kind": "preferred", "replacement": "", "rule_code": ""},
+    {"term": "gentle", "kind": "preferred", "replacement": "", "rule_code": ""}
+  ]
+}

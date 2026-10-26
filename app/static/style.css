@@ -1,0 +1,4 @@
+/* BrandProof – Base styles */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', system-ui, sans-serif; background: #0f1117; color: #e4e4e7; }
+h1 { text-align: center; padding: 2rem; }
