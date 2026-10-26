@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrandProof – Round 2 Submission</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', system-ui, sans-serif; color: #1e293b; line-height: 1.6; padding: 40px; max-width: 900px; margin: 0 auto; background: #fff; }
+        
+        @media print {
+            body { padding: 20px; font-size: 11pt; }
+            .page-break { page-break-before: always; }
+            h1 { font-size: 24pt; }
+            h2 { font-size: 16pt; }
+            h3 { font-size: 13pt; }
+        }
+
+        h1 { font-size: 2.5rem; font-weight: 800; color: #0f172a; margin-bottom: 0.25rem; }
+        h2 { font-size: 1.4rem; font-weight: 700; color: #1e40af; margin-top: 2rem; margin-bottom: 0.75rem; padding-bottom: 0.3rem; border-bottom: 2px solid #dbeafe; }
+        h3 { font-size: 1.1rem; font-weight: 700; color: #334155; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+        p { margin-bottom: 0.75rem; color: #475569; }
+        
+        .subtitle { font-size: 1.15rem; color: #3b82f6; font-weight: 600; margin-bottom: 0.5rem; }
+        .tagline { font-size: 0.95rem; color: #64748b; margin-bottom: 1.5rem; }
+        
+        .badge { display: inline-block; padding: 2px 10px; border-radius: 50px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+        .badge-done { background: #dcfce7; color: #166534; }
+        .badge-tech { background: #dbeafe; color: #1e40af; }
+        
+        table { width: 100%; border-collapse: collapse; margin: 0.75rem 0 1rem; font-size: 0.85rem; }
+        th { text-align: left; padding: 8px 10px; background: #f1f5f9; color: #475569; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 6px 10px; border-bottom: 1px solid #f1f5f9; color: #334155; vertical-align: top; }
+        tr:hover td { background: #f8fafc; }
+        
+        ul, ol { margin: 0.5rem 0 1rem 1.25rem; }
+        li { margin-bottom: 0.3rem; color: #475569; font-size: 0.9rem; }
+        li strong { color: #1e293b; }
+
+        .links-box { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 1rem 1.25rem; margin: 1rem 0; }
+        .links-box a { color: #1e40af; text-decoration: none; font-weight: 600; }
+        .links-box p { margin-bottom: 0.3rem; }
+        
+        .highlight-box { background: #fefce8; border-left: 4px solid #eab308; padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+        .highlight-box strong { color: #854d0e; }
+        
+        .improvement-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 0.75rem; }
+        .improvement-card h3 { margin-top: 0; color: #1e40af; }
+        .improvement-card p { font-size: 0.85rem; }
+
+        .footer { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #e2e8f0; font-size: 0.8rem; color: #94a3b8; text-align: center; }
+
+        .screenshots { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 1rem 0; }
+        .screenshot { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; }
+        .screenshot img { width: 100%; display: block; }
+        .screenshot-label { padding: 4px 8px; background: #f1f5f9; font-size: 0.75rem; font-weight: 600; color: #64748b; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <h1>BrandProof</h1>
+    <p class="subtitle">Cite-or-Abstain Brand Governance Review Tool</p>
+    <p class="tagline">Every finding is backed by your rules — or flagged for human review. No guessing, no hallucination.</p>
+
+    <div class="links-box">
+        <p>🔗 <strong>Live App:</strong> <a href="https://brandproof.onrender.com">https://brandproof.onrender.com</a> <em>(update with your Render URL)</em></p>
+        <p>📦 <strong>Source Code:</strong> <a href="https://github.com/pravar0709/Brand-Proof">https://github.com/pravar0709/Brand-Proof</a></p>
+        <p>📊 <strong>Tests:</strong> 22/22 passing | <strong>Commits:</strong> 9 meaningful commits</p>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <h2>1. What BrandProof Does</h2>
+    
+    <p>Organisations maintain brand guidelines, a <strong>Claim Ledger</strong> (approved facts with evidence, allowed wording, and expiry dates), and a banned/preferred term list. A content creator submits a marketing draft. BrandProof checks every claim against all three sources, returns findings that <strong>cite the exact guideline rule or Ledger entry</strong> (quoted text), explain why, give a confidence label, and suggest an intent-preserving rewrite.</p>
+
+    <p>Creators accept, edit, or dispute each finding — <strong>nothing is auto-applied</strong>. A reviewer then approves or requests changes.</p>
+
+    <div class="highlight-box">
+        <strong>Core Principle — Cite or Abstain:</strong> If no supporting source exists, or the AI's quoted evidence isn't literally in the source text, the finding is marked <em>"Unverified: needs human review."</em> BrandProof never guesses.
+    </div>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <h2>2. Completed Features</h2>
+
+    <h3>Core Workflow (End-to-End)</h3>
+    <ul>
+        <li><strong>One-click demo login</strong> (Creator / Manager / Reviewer) — no signup needed</li>
+        <li><strong>Submit drafts</strong> via text input or DOCX file upload</li>
+        <li><strong>Automated review pipeline</strong>: 6 deterministic checks + optional AI verification</li>
+        <li><strong>9+ findings</strong> per sample draft with severity badges, source citations, and suggestions</li>
+        <li><strong>Accept / Edit / Dispute</strong> each finding with reasons</li>
+        <li><strong>Reviewer queue</strong>: review findings, Approve or Request Changes</li>
+        <li><strong>Approval blocks</strong> if findings are pending (override requires logged reason)</li>
+        <li><strong>Version history</strong>: resubmit creates new version, old findings preserved</li>
+    </ul>
+
+    <h3>Deterministic Checks (Always Run, No External API)</h3>
+    <table>
+        <tr><th>Check</th><th>What It Detects</th><th>Rule</th></tr>
+        <tr><td>Banned/Preferred Terms</td><td>Word-boundary regex matching against term list</td><td>R1</td></tr>
+        <tr><td>Superlative Claims</td><td>"#1", "best", "world's leading" without Ledger support</td><td>R3</td></tr>
+        <tr><td>Guarantee Language</td><td>"guaranteed", "100%", "miracle", "permanent"</td><td>R2</td></tr>
+        <tr><td>Medical Claims</td><td>"clinically proven", "treats", "heals", "prescription-strength"</td><td>R4</td></tr>
+        <tr><td>Number Mismatches</td><td>"12 hours" vs Ledger's "2 hours"</td><td>Ledger</td></tr>
+        <tr><td>Expired Claims</td><td>References to expired Ledger entries (e.g., ended promotions)</td><td>Ledger</td></tr>
+        <tr><td>Tone Analysis</td><td>Exclamation density, ALL CAPS, fear/aggressive language</td><td>R6, R7</td></tr>
+        <tr><td>Emoji Count</td><td>More than 2 emojis per post</td><td>R9</td></tr>
+        <tr><td>Hashtag Accessibility</td><td>All-lowercase hashtags (should be CamelCase)</td><td>R8</td></tr>
+        <tr><td>Readability</td><td>Average sentence length > 25 words</td><td>R12</td></tr>
+        <tr><td>Sunscreen Safety</td><td>SPF mention without "reapply every 2 hours"</td><td>R5</td></tr>
+    </table>
+
+    <h3>AI Pipeline (Optional, Clearly Marked)</h3>
+    <ul>
+        <li><strong>TF-IDF retrieval</strong> (scikit-learn) — finds top-3 relevant rules/ledger per segment</li>
+        <li><strong>Provider-agnostic LLM</strong> (Gemini / Anthropic via httpx) — strict JSON, 15s timeout</li>
+        <li><strong>Text redaction</strong> — emails, phones, confidential terms masked before LLM</li>
+        <li><strong>Quote verification</strong> — AI's cited evidence verified as literal substring of source</li>
+        <li><strong>Graceful fallback</strong> — deterministic checks always work; banner shown if AI unavailable</li>
+        <li><strong>AI badge</strong> on every AI-generated finding</li>
+    </ul>
+
+    <h3>Other Features</h3>
+    <ul>
+        <li><strong>Manager dashboard</strong> — Rules, Claim Ledger, Terms tabs with data tables</li>
+        <li><strong>Insights page</strong> — Top flagged rules, dispute counts, expiring ledger entries</li>
+        <li><strong>AI Disclosure page</strong> — Code vs AI checks, data handling, human-in-the-loop policy, limitations</li>
+        <li><strong>Audit log</strong> — Every login, review, decision, comment, approval recorded</li>
+        <li><strong>Rate limiting</strong> — 30 reviews/hour/IP</li>
+        <li><strong>22 pytest tests</strong> — covering all checks, pipeline, auth, and workflow</li>
+    </ul>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <div class="page-break"></div>
+    <h2>3. Technology Stack</h2>
+
+    <table>
+        <tr><th>Layer</th><th>Technology</th><th>Why</th></tr>
+        <tr><td>Backend</td><td>Python 3.11 + FastAPI</td><td>Async, auto OpenAPI docs, Pydantic validation</td></tr>
+        <tr><td>Database</td><td>SQLite + SQLAlchemy ORM</td><td>Zero-config, WAL mode, 9 models, portable</td></tr>
+        <tr><td>Retrieval</td><td>scikit-learn TF-IDF</td><td>Lightweight, no GPU, excellent for small corpus</td></tr>
+        <tr><td>LLM</td><td>httpx → Gemini/Anthropic</td><td>Provider-agnostic, no heavy SDKs, strict JSON</td></tr>
+        <tr><td>Auth</td><td>itsdangerous tokens</td><td>Signed demo tokens, role-based guards</td></tr>
+        <tr><td>Frontend</td><td>Alpine.js + vanilla CSS</td><td>No build step, reactive SPA, served as static files</td></tr>
+        <tr><td>File Parsing</td><td>python-docx</td><td>DOCX text extraction</td></tr>
+        <tr><td>Testing</td><td>pytest (22 tests)</td><td>Unit + integration coverage</td></tr>
+        <tr><td>Deployment</td><td>Docker + Render</td><td>One-click deploy with render.yaml</td></tr>
+    </table>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <h2>4. Changes from Original Plan</h2>
+
+    <table>
+        <tr><th>Original Plan</th><th>What Changed</th><th>Why</th></tr>
+        <tr><td>FAISS / sentence embeddings</td><td>TF-IDF (scikit-learn)</td><td>14 rules + 10 ledger entries don't need heavy embeddings. TF-IDF is fast, accurate, and uses <50MB memory</td></tr>
+        <tr><td>PostgreSQL</td><td>SQLite</td><td>Zero-config, portable, demo-appropriate. SQLAlchemy abstraction = one-line switch later</td></tr>
+        <tr><td>Local NLI second verifier</td><td>Deferred to Round 3</td><td>400MB memory limit can't run a transformer. Quote-check provides code-based alternative</td></tr>
+        <tr><td>PDF/image review</td><td>Out of scope</td><td>Focused on complete text/DOCX workflow over partial format support</td></tr>
+    </table>
+
+    <p><strong>What didn't change:</strong> The core Cite-or-Abstain pipeline is exactly as proposed. Deterministic checks cite rules/ledger; AI findings are quote-verified; unverifiable findings are honestly labeled.</p>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <h2>5. Three Round 3 Improvements</h2>
+
+    <div class="improvement-card">
+        <h3>1. Calibrated Two-Verifier Agreement</h3>
+        <p>Build a labelled benchmark of ~150 (claim, source, expected_verdict) tuples. Compare deterministic checker vs LLM verifier vs combined agreement. Measure false-"Supported" rate and use disagreement signals for calibrated confidence scoring. <strong>Moves from heuristic to data-driven, measurable accuracy.</strong></p>
+    </div>
+
+    <div class="improvement-card">
+        <h3>2. Guideline Clarity Analytics</h3>
+        <p>Cluster disputed findings by rule code to identify which brand guidelines generate the most disputes (likely ambiguous or poorly worded). Surface recommendations to managers to clarify rule text. <strong>Creates a feedback loop: the system gets smarter from usage data and helps orgs improve their own guidelines.</strong></p>
+    </div>
+
+    <div class="improvement-card">
+        <h3>3. Privacy-First Enhanced Disclosure & Compliance Reports</h3>
+        <p>Add per-finding redaction visibility (show what was masked before LLM), browsable audit log in UI, Ledger-expiry alert dashboard with notifications, and exportable compliance reports (PDF/CSV). <strong>Addresses enterprise trust and regulatory requirements for real-world deployment.</strong></p>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <h2>6. AI Disclosure</h2>
+
+    <ul>
+        <li><strong>AI coding assistance:</strong> Antigravity / Gemini and Claude used for planning and code generation</li>
+        <li><strong>LLM in product:</strong> Optional (Gemini/Anthropic) for supplementary claim verification only</li>
+        <li><strong>AI findings:</strong> Clearly marked with 🤖 AI badge in the UI</li>
+        <li><strong>Data handling:</strong> Only redacted text sent to LLM; emails, phones, terms masked</li>
+        <li><strong>Human-in-the-loop:</strong> No changes auto-applied; every finding requires human decision</li>
+        <li><strong>Seed data:</strong> All data (GlowLeaf brand) is fictional/synthetic</li>
+    </ul>
+
+    <div class="footer">
+        BrandProof — Round 2 Submission | Built for 48-hour hackathon | All seed data is fictional
+    </div>
+
+</body>
+</html>
