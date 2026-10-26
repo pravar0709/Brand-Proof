@@ -11,10 +11,646 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script defer src="/static/app.js"></script>
 </head>
-<body>
-    <div id="app">
-        <h1>BrandProof</h1>
-        <p>Brand governance review – loading…</p>
+<body x-data="brandproof()" x-init="init()">
+
+    <!-- Toast notifications -->
+    <div class="toast-container" id="toast-container">
+        <template x-for="(t, i) in toasts" :key="i">
+            <div :class="'toast toast-' + t.type" x-text="t.msg" x-show="t.visible"
+                 x-transition:leave="fadeOut 0.3s ease"></div>
+        </template>
     </div>
+
+    <!-- Navbar (shown when logged in) -->
+    <nav class="navbar" x-show="user" x-cloak>
+        <div class="container">
+            <div class="navbar-brand">
+                <div class="logo-icon">B</div>
+                BrandProof
+            </div>
+            <div class="nav-links" x-show="user">
+                <template x-if="user && user.role === 'creator'">
+                    <div class="flex gap-1">
+                        <button :class="{'active': page==='creator'}" @click="page='creator'" id="nav-creator">✏️ Create</button>
+                        <button :class="{'active': page==='my-submissions'}" @click="page='my-submissions'; loadSubmissions()" id="nav-subs">📋 My Work</button>
+                    </div>
+                </template>
+                <template x-if="user && user.role === 'manager'">
+                    <div class="flex gap-1">
+                        <button :class="{'active': page==='manager'}" @click="page='manager'; activeManagerTab='rules'" id="nav-manager">⚙️ Manage</button>
+                        <button :class="{'active': page==='insights'}" @click="page='insights'; loadInsights()" id="nav-insights">📊 Insights</button>
+                    </div>
+                </template>
+                <template x-if="user && user.role === 'reviewer'">
+                    <div class="flex gap-1">
+                        <button :class="{'active': page==='reviewer'}" @click="page='reviewer'; loadSubmissions()" id="nav-reviewer">📝 Review Queue</button>
+                    </div>
+                </template>
+                <button :class="{'active': page==='disclosure'}" @click="page='disclosure'; loadDisclosure()" id="nav-disclosure">ℹ️ AI Disclosure</button>
+            </div>
+            <div class="navbar-user" x-show="user">
+                <div class="user-badge">
+                    <span class="role-dot"></span>
+                    <span x-text="user ? user.name + ' (' + user.role + ')' : ''"></span>
+                </div>
+                <button class="btn btn-ghost btn-sm" @click="logout()" id="btn-logout">Sign Out</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ═══ Landing Page ═══ -->
+    <div x-show="!user" class="landing">
+        <h1>BrandProof</h1>
+        <p class="tagline">Cite-or-Abstain brand governance. Every finding is backed by your rules — or flagged for human review.</p>
+
+        <div class="role-buttons">
+            <button class="role-btn" @click="login('creator')" id="btn-try-creator">
+                <span class="role-icon">✏️</span>
+                <span class="role-name">Try as Creator</span>
+                <span class="role-desc">Submit & review content</span>
+            </button>
+            <button class="role-btn" @click="login('manager')" id="btn-try-manager">
+                <span class="role-icon">⚙️</span>
+                <span class="role-name">Try as Manager</span>
+                <span class="role-desc">Manage rules & ledger</span>
+            </button>
+            <button class="role-btn" @click="login('reviewer')" id="btn-try-reviewer">
+                <span class="role-icon">✅</span>
+                <span class="role-name">Try as Reviewer</span>
+                <span class="role-desc">Approve submissions</span>
+            </button>
+        </div>
+
+        <div class="how-it-works">
+            <div class="how-step">
+                <div class="step-num">1</div>
+                <h3>Submit Draft</h3>
+                <p>Paste your content or upload a DOCX file</p>
+            </div>
+            <div class="how-step">
+                <div class="step-num">2</div>
+                <h3>Auto-Check</h3>
+                <p>Rules, Ledger & AI verify every claim</p>
+            </div>
+            <div class="how-step">
+                <div class="step-num">3</div>
+                <h3>Review & Decide</h3>
+                <p>Accept, edit, or dispute each finding</p>
+            </div>
+            <div class="how-step">
+                <div class="step-num">4</div>
+                <h3>Approve</h3>
+                <p>Reviewer signs off on compliant content</p>
+            </div>
+        </div>
+
+        <p class="text-xs text-muted mt-3">
+            <a href="#" @click.prevent="loginThenDisclosure()">How we use AI →</a>
+        </p>
+    </div>
+
+    <!-- ═══ Creator View ═══ -->
+    <div x-show="user && user.role === 'creator' && page === 'creator'" class="main-content">
+        <div class="container">
+            <h2 class="mb-2">Check Your Content</h2>
+
+            <!-- Sample loader -->
+            <div class="flex items-center gap-2 mb-2" style="flex-wrap:wrap">
+                <label for="sample-select" style="margin:0;text-transform:none;font-size:0.85rem">Load a sample draft:</label>
+                <select id="sample-select" style="width:auto;max-width:300px"
+                        x-model="selectedSample" @change="loadSample()">
+                    <option value="">— Select —</option>
+                    <template x-for="(s, i) in samples" :key="i">
+                        <option :value="i" x-text="s.title"></option>
+                    </template>
+                </select>
+            </div>
+
+            <!-- Draft input -->
+            <div class="card mb-2">
+                <div class="mb-1">
+                    <label for="draft-title">Title</label>
+                    <input id="draft-title" type="text" x-model="draftTitle" placeholder="e.g. Summer Campaign Post">
+                </div>
+                <div class="mb-1">
+                    <label for="draft-text">Content</label>
+                    <textarea id="draft-text" x-model="draftText" rows="5" placeholder="Paste your draft content here..."></textarea>
+                </div>
+                <div class="flex gap-1" style="flex-wrap:wrap">
+                    <button class="btn btn-primary" @click="submitAndReview()" :disabled="loading || !draftText.trim()" id="btn-check">
+                        <template x-if="loading"><span class="spinner"></span></template>
+                        <template x-if="!loading">🔍</template>
+                        Check My Content
+                    </button>
+                    <label class="btn btn-ghost" style="cursor:pointer" for="docx-upload">
+                        📄 Upload DOCX
+                    </label>
+                    <input type="file" id="docx-upload" accept=".docx,.txt" style="display:none" @change="uploadFile($event)">
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div x-show="currentSubmission" x-cloak>
+                <!-- AI banner -->
+                <div class="ai-banner" x-show="aiStatus === 'unavailable'">
+                    ⚠️ AI check unavailable — showing rule-based results only. Deterministic checks are fully functional.
+                </div>
+
+                <!-- Status stepper -->
+                <div class="stepper">
+                    <span :class="'stepper-step ' + (currentSubmission && ['draft'].includes(currentSubmission.status) ? 'active' : (currentSubmission && currentSubmission.status !== 'draft' ? 'done' : ''))">Draft</span>
+                    <span class="stepper-arrow">→</span>
+                    <span :class="'stepper-step ' + (currentSubmission && currentSubmission.status === 'in_review' ? 'active' : (currentSubmission && ['changes_requested','approved'].includes(currentSubmission.status) ? 'done' : ''))">In Review</span>
+                    <span class="stepper-arrow">→</span>
+                    <span :class="'stepper-step ' + (currentSubmission && currentSubmission.status === 'approved' ? 'active done' : '')">Approved</span>
+                </div>
+
+                <!-- Summary -->
+                <div class="summary-bar" x-show="findings.length > 0">
+                    <div class="summary-stat">
+                        <span class="count" x-text="findings.filter(f => f.severity === 'high').length"></span>
+                        <span class="badge badge-high">High</span>
+                    </div>
+                    <div class="summary-stat">
+                        <span class="count" x-text="findings.filter(f => f.severity === 'medium').length"></span>
+                        <span class="badge badge-medium">Medium</span>
+                    </div>
+                    <div class="summary-stat">
+                        <span class="count" x-text="findings.filter(f => f.severity === 'low').length"></span>
+                        <span class="badge badge-low">Low</span>
+                    </div>
+                    <div class="summary-stat">
+                        <span class="count" x-text="findings.filter(f => f.verdict === 'unverified').length"></span>
+                        <span class="badge badge-unverified">Unverified</span>
+                    </div>
+                </div>
+
+                <!-- Highlighted text -->
+                <div class="card mb-2">
+                    <div class="card-header">
+                        <h3>📝 Draft with Highlights</h3>
+                        <span :class="'badge badge-status badge-' + (currentSubmission ? currentSubmission.status : '')"
+                              x-text="currentSubmission ? currentSubmission.status.replace('_',' ') : ''"></span>
+                    </div>
+                    <div class="highlighted-text" x-html="highlightedText()"></div>
+                </div>
+
+                <!-- Findings list -->
+                <div class="card mb-2">
+                    <div class="card-header">
+                        <h3>🔍 Findings (<span x-text="findings.length"></span>)</h3>
+                    </div>
+
+                    <div x-show="findings.length === 0" class="empty-state">
+                        <div class="empty-icon">✅</div>
+                        <p>No findings! Your content looks great.</p>
+                    </div>
+
+                    <template x-for="f in findings" :key="f.id">
+                        <div :class="'finding-card severity-' + f.severity">
+                            <div class="finding-header">
+                                <span :class="'badge badge-' + f.severity" x-text="f.severity"></span>
+                                <span :class="'badge badge-' + f.verdict" x-text="f.verdict"></span>
+                                <span class="badge" style="background:rgba(255,255,255,0.05);color:var(--text-muted)" x-text="f.category"></span>
+                                <span class="badge badge-ai" x-show="f.ai_generated">🤖 AI</span>
+                                <span :class="'badge badge-' + f.decision" x-text="f.decision" style="margin-left:auto"></span>
+                            </div>
+
+                            <div class="finding-text" x-text="f.explanation"></div>
+
+                            <div class="finding-source" x-show="f.source_quote">
+                                <strong x-text="f.source_type === 'rule' ? '📏 Rule' : (f.source_type === 'ledger' ? '📋 Ledger #' + f.source_id : '❓ Source')"></strong>:
+                                "<span x-text="f.source_quote.substring(0, 200) + (f.source_quote.length > 200 ? '...' : '')"></span>"
+                            </div>
+                            <div class="finding-source" x-show="!f.source_quote && f.verdict === 'unverified'" style="border-color:rgba(139,92,246,0.3)">
+                                <strong>⚠️ Unverified</strong>: No approved source supports this claim. Needs human review.
+                            </div>
+
+                            <div class="finding-suggestion" x-show="f.suggestion">
+                                💡 <span x-text="f.suggestion"></span>
+                            </div>
+
+                            <div class="finding-actions" x-show="f.decision === 'pending' && user && user.role === 'creator'">
+                                <button class="btn btn-success btn-sm" @click="decideFinding(f.id, 'accepted')">✓ Accept</button>
+                                <button class="btn btn-primary btn-sm" @click="startEdit(f)">✏️ Edit</button>
+                                <button class="btn btn-warning btn-sm" @click="startDispute(f)">⚡ Dispute</button>
+                            </div>
+                            <div x-show="f.decision === 'edited'" class="text-sm text-muted mt-1">
+                                Edited to: "<span x-text="f.edited_text" style="color:var(--accent-emerald)"></span>"
+                            </div>
+                            <div x-show="f.decision === 'disputed'" class="text-sm text-muted mt-1">
+                                Disputed: "<span x-text="f.dispute_reason" style="color:var(--accent-amber)"></span>"
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex gap-1" style="flex-wrap:wrap">
+                    <button class="btn btn-primary" @click="applyAccepted()" x-show="findings.some(f => f.decision === 'accepted' || f.decision === 'edited')" id="btn-apply">
+                        ✨ Apply Accepted Changes
+                    </button>
+                    <button class="btn btn-success" @click="submitForReview()" x-show="currentSubmission && currentSubmission.status === 'in_review'" id="btn-submit-review">
+                        🚀 Submit for Review
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ My Submissions (Creator) ═══ -->
+    <div x-show="user && user.role === 'creator' && page === 'my-submissions'" class="main-content">
+        <div class="container">
+            <h2 class="mb-2">My Submissions</h2>
+            <div x-show="submissions.length === 0" class="empty-state">
+                <div class="empty-icon">📄</div>
+                <p>No submissions yet. Go to Create to get started!</p>
+            </div>
+            <template x-for="s in submissions" :key="s.id">
+                <div class="card mb-1" style="cursor:pointer" @click="openSubmission(s.id)">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 x-text="s.title"></h3>
+                            <span class="text-xs text-muted" x-text="'Version ' + s.current_version"></span>
+                        </div>
+                        <span :class="'badge badge-status badge-' + s.status" x-text="s.status.replace('_',' ')"></span>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+
+    <!-- ═══ Manager View ═══ -->
+    <div x-show="user && user.role === 'manager' && page === 'manager'" class="main-content">
+        <div class="container">
+            <h2 class="mb-2">Brand Management</h2>
+            <div class="tabs">
+                <button :class="'tab ' + (activeManagerTab === 'rules' ? 'active' : '')" @click="activeManagerTab='rules'; loadRules()">Rules</button>
+                <button :class="'tab ' + (activeManagerTab === 'ledger' ? 'active' : '')" @click="activeManagerTab='ledger'; loadLedger()">Claim Ledger</button>
+                <button :class="'tab ' + (activeManagerTab === 'terms' ? 'active' : '')" @click="activeManagerTab='terms'; loadTerms()">Terms</button>
+            </div>
+
+            <!-- Rules Tab -->
+            <div x-show="activeManagerTab === 'rules'">
+                <div class="card">
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>Code</th><th>Title</th><th>Category</th><th>Severity</th></tr>
+                        </thead>
+                        <tbody>
+                            <template x-for="r in rules" :key="r.id">
+                                <tr>
+                                    <td><strong x-text="r.code"></strong></td>
+                                    <td x-text="r.title"></td>
+                                    <td><span class="badge" style="background:rgba(255,255,255,0.05);color:var(--text-muted)" x-text="r.category"></span></td>
+                                    <td><span :class="'badge badge-' + r.severity" x-text="r.severity"></span></td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Ledger Tab -->
+            <div x-show="activeManagerTab === 'ledger'">
+                <div class="card" style="overflow-x:auto">
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>#</th><th>Claim</th><th>Evidence</th><th>Expires</th><th>Status</th></tr>
+                        </thead>
+                        <tbody>
+                            <template x-for="le in ledgerEntries" :key="le.id">
+                                <tr :class="le.status === 'expired' ? 'expired-row' : ''">
+                                    <td x-text="le.id"></td>
+                                    <td x-text="le.claim.substring(0, 50) + (le.claim.length > 50 ? '...' : '')"></td>
+                                    <td x-text="le.evidence.substring(0, 60) + (le.evidence.length > 60 ? '...' : '')" class="text-muted"></td>
+                                    <td x-text="le.expires_on || '—'"></td>
+                                    <td>
+                                        <span :class="'badge badge-' + (le.status === 'expired' ? 'expired' : 'approved')" x-text="le.status"></span>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Terms Tab -->
+            <div x-show="activeManagerTab === 'terms'">
+                <div class="card">
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>Term</th><th>Kind</th><th>Replacement</th><th>Rule</th></tr>
+                        </thead>
+                        <tbody>
+                            <template x-for="t in termsData" :key="t.id">
+                                <tr>
+                                    <td><strong x-text="t.term"></strong></td>
+                                    <td>
+                                        <span :class="'badge ' + (t.kind === 'banned' ? 'badge-contradicted' : 'badge-supported')" x-text="t.kind"></span>
+                                    </td>
+                                    <td x-text="t.replacement || '—'" class="text-muted"></td>
+                                    <td x-text="t.rule_code || '—'" class="text-muted"></td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ Insights ═══ -->
+    <div x-show="user && user.role === 'manager' && page === 'insights'" class="main-content">
+        <div class="container">
+            <h2 class="mb-2">Insights</h2>
+            <div class="grid-2 mb-2">
+                <div class="card">
+                    <h3 class="mb-1">Total Submissions</h3>
+                    <div style="font-size:2.5rem;font-weight:800;background:var(--gradient-primary);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text" x-text="insightsData.total_submissions || 0"></div>
+                </div>
+                <div class="card">
+                    <h3 class="mb-1">Total Findings</h3>
+                    <div style="font-size:2.5rem;font-weight:800;background:var(--gradient-danger);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text" x-text="insightsData.total_findings || 0"></div>
+                </div>
+            </div>
+            <div class="card mb-2">
+                <h3 class="mb-1">Top Flagged Rules</h3>
+                <div class="bar-chart" x-show="insightsData.top_flagged_rules && insightsData.top_flagged_rules.length > 0">
+                    <template x-for="r in insightsData.top_flagged_rules" :key="r.source_id">
+                        <div class="bar-row">
+                            <span class="bar-label" x-text="'Rule #' + r.source_id"></span>
+                            <div class="bar-track">
+                                <div class="bar-fill" :style="'width:' + Math.min(100, r.count * 10) + '%'" x-text="r.count"></div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                <div x-show="!insightsData.top_flagged_rules || insightsData.top_flagged_rules.length === 0" class="empty-state">
+                    <p>No data yet. Run some reviews first!</p>
+                </div>
+            </div>
+            <div class="card" x-show="insightsData.expiring_ledger && insightsData.expiring_ledger.length > 0">
+                <h3 class="mb-1">⚠️ Ledger Entries Expiring in 30 Days</h3>
+                <template x-for="e in insightsData.expiring_ledger" :key="e.id">
+                    <div class="flex items-center justify-between mb-1 text-sm">
+                        <span x-text="e.claim"></span>
+                        <span class="badge badge-warning" x-text="'Expires: ' + e.expires_on"></span>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ Reviewer View ═══ -->
+    <div x-show="user && user.role === 'reviewer' && page === 'reviewer'" class="main-content">
+        <div class="container">
+            <h2 class="mb-2">Review Queue</h2>
+            <div x-show="submissions.length === 0" class="empty-state">
+                <div class="empty-icon">📋</div>
+                <p>No submissions to review. Check back later!</p>
+            </div>
+            <template x-for="s in submissions" :key="s.id">
+                <div class="card mb-1" style="cursor:pointer" @click="openSubmission(s.id)">
+                    <div class="flex items-center justify-between" style="flex-wrap:wrap;gap:0.5rem">
+                        <div>
+                            <h3 x-text="s.title"></h3>
+                            <span class="text-xs text-muted" x-text="'Version ' + s.current_version"></span>
+                        </div>
+                        <span :class="'badge badge-status badge-' + s.status" x-text="s.status.replace('_',' ')"></span>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+
+    <!-- ═══ Submission Detail (Reviewer / Creator) ═══ -->
+    <div x-show="page === 'submission-detail' && currentSubmission" class="main-content">
+        <div class="container">
+            <button class="btn btn-ghost btn-sm mb-2" @click="goBack()">← Back</button>
+            <div class="flex items-center justify-between mb-2" style="flex-wrap:wrap;gap:0.5rem">
+                <h2 x-text="currentSubmission ? currentSubmission.title : ''"></h2>
+                <span :class="'badge badge-status badge-' + (currentSubmission ? currentSubmission.status : '')"
+                      x-text="currentSubmission ? currentSubmission.status.replace('_',' ') : ''"></span>
+            </div>
+
+            <!-- AI banner -->
+            <div class="ai-banner" x-show="aiStatus === 'unavailable'">
+                ⚠️ AI check unavailable — showing rule-based results only.
+            </div>
+
+            <!-- Status stepper -->
+            <div class="stepper">
+                <span :class="'stepper-step ' + (currentSubmission && currentSubmission.status === 'draft' ? 'active' : (currentSubmission && currentSubmission.status !== 'draft' ? 'done' : ''))">Draft</span>
+                <span class="stepper-arrow">→</span>
+                <span :class="'stepper-step ' + (currentSubmission && currentSubmission.status === 'in_review' ? 'active' : (currentSubmission && ['changes_requested','approved'].includes(currentSubmission.status) ? 'done' : ''))">In Review</span>
+                <span class="stepper-arrow">→</span>
+                <span :class="'stepper-step ' + (currentSubmission && currentSubmission.status === 'approved' ? 'done' : '')">Approved</span>
+            </div>
+
+            <div class="grid-2" style="align-items:start">
+                <!-- Left: text + findings -->
+                <div>
+                    <!-- Version selector -->
+                    <div class="flex items-center gap-1 mb-1" x-show="currentSubmission && currentSubmission.versions && currentSubmission.versions.length > 1">
+                        <label for="version-select" style="margin:0;text-transform:none;font-size:0.8rem">Version:</label>
+                        <select id="version-select" style="width:auto" x-model="selectedVersion">
+                            <template x-for="v in (currentSubmission ? currentSubmission.versions : [])" :key="v.id">
+                                <option :value="v.version_no" x-text="'v' + v.version_no"></option>
+                            </template>
+                        </select>
+                    </div>
+
+                    <div class="card mb-1">
+                        <h3 class="mb-1">Draft Text</h3>
+                        <div class="highlighted-text" x-html="highlightedText()"></div>
+                    </div>
+
+                    <!-- Summary -->
+                    <div class="summary-bar" x-show="findings.length > 0">
+                        <div class="summary-stat"><span class="count" x-text="findings.filter(f=>f.severity==='high').length"></span><span class="badge badge-high">High</span></div>
+                        <div class="summary-stat"><span class="count" x-text="findings.filter(f=>f.severity==='medium').length"></span><span class="badge badge-medium">Medium</span></div>
+                        <div class="summary-stat"><span class="count" x-text="findings.filter(f=>f.verdict==='unverified').length"></span><span class="badge badge-unverified">Unverified</span></div>
+                    </div>
+
+                    <template x-for="f in findings" :key="f.id">
+                        <div :class="'finding-card severity-' + f.severity">
+                            <div class="finding-header">
+                                <span :class="'badge badge-' + f.severity" x-text="f.severity"></span>
+                                <span :class="'badge badge-' + f.verdict" x-text="f.verdict"></span>
+                                <span class="badge" style="background:rgba(255,255,255,0.05);color:var(--text-muted)" x-text="f.category"></span>
+                                <span class="badge badge-ai" x-show="f.ai_generated">🤖 AI</span>
+                                <span :class="'badge badge-' + f.decision" x-text="f.decision" style="margin-left:auto"></span>
+                            </div>
+                            <div class="finding-text" x-text="f.explanation"></div>
+                            <div class="finding-source" x-show="f.source_quote">
+                                <strong x-text="f.source_type === 'rule' ? '📏 Rule' : '📋 Ledger #' + f.source_id"></strong>:
+                                "<span x-text="f.source_quote.substring(0, 200) + (f.source_quote.length > 200 ? '...' : '')"></span>"
+                            </div>
+                            <div class="finding-suggestion" x-show="f.suggestion">
+                                💡 <span x-text="f.suggestion"></span>
+                            </div>
+                            <div class="finding-actions" x-show="f.decision === 'pending' && user && user.role === 'creator'">
+                                <button class="btn btn-success btn-sm" @click="decideFinding(f.id, 'accepted')">✓ Accept</button>
+                                <button class="btn btn-primary btn-sm" @click="startEdit(f)">✏️ Edit</button>
+                                <button class="btn btn-warning btn-sm" @click="startDispute(f)">⚡ Dispute</button>
+                            </div>
+                            <div x-show="f.decision === 'edited'" class="text-sm text-muted mt-1">Edited to: "<span x-text="f.edited_text" style="color:var(--accent-emerald)"></span>"</div>
+                            <div x-show="f.decision === 'disputed'" class="text-sm text-muted mt-1">Disputed: "<span x-text="f.dispute_reason" style="color:var(--accent-amber)"></span>"</div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Right: comments + actions -->
+                <div>
+                    <!-- Reviewer/Manager actions -->
+                    <div class="card mb-1" x-show="user && (user.role === 'reviewer' || user.role === 'manager')">
+                        <h3 class="mb-1">Actions</h3>
+                        <div class="flex gap-1" style="flex-wrap:wrap">
+                            <button class="btn btn-success" @click="approveSubmission()" id="btn-approve">✅ Approve</button>
+                            <button class="btn btn-warning" @click="requestChanges()" id="btn-request-changes">🔄 Request Changes</button>
+                        </div>
+                    </div>
+
+                    <!-- Resubmit (Creator) -->
+                    <div class="card mb-1" x-show="user && user.role === 'creator' && currentSubmission && currentSubmission.status !== 'approved'">
+                        <h3 class="mb-1">Resubmit</h3>
+                        <textarea x-model="resubmitText" rows="4" placeholder="Paste your revised content..."></textarea>
+                        <button class="btn btn-primary btn-sm mt-1" @click="resubmit()" :disabled="!resubmitText.trim()">📤 Resubmit New Version</button>
+                    </div>
+
+                    <!-- Comments -->
+                    <div class="card">
+                        <h3 class="mb-1">💬 Comments</h3>
+                        <div x-show="currentSubmission && currentSubmission.comments && currentSubmission.comments.length === 0" class="text-sm text-muted">No comments yet.</div>
+                        <template x-for="c in (currentSubmission ? currentSubmission.comments || [] : [])" :key="c.id">
+                            <div class="comment">
+                                <div class="comment-header">
+                                    <span class="comment-author" x-text="c.author_name"></span>
+                                    <span class="comment-time" x-text="c.created_at ? new Date(c.created_at).toLocaleString() : ''"></span>
+                                </div>
+                                <div class="comment-body" x-text="c.body"></div>
+                            </div>
+                        </template>
+                        <div class="mt-1">
+                            <textarea x-model="commentText" rows="2" placeholder="Add a comment..." style="min-height:60px"></textarea>
+                            <button class="btn btn-ghost btn-sm mt-1" @click="addComment()" :disabled="!commentText.trim()">Send Comment</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ Disclosure Page ═══ -->
+    <div x-show="page === 'disclosure'" class="main-content">
+        <div class="container" style="max-width:800px">
+            <h2 class="mb-2">AI & Data Disclosure</h2>
+
+            <div class="disclosure-section card mb-2">
+                <h3>🤖 What's checked by code (always runs)</h3>
+                <ul class="disclosure-list">
+                    <template x-for="c in (disclosureData.checks_by_code || [])" :key="c">
+                        <li x-text="c"></li>
+                    </template>
+                </ul>
+            </div>
+
+            <div class="disclosure-section card mb-2">
+                <h3>🧠 What's checked by AI (supplementary)</h3>
+                <ul class="disclosure-list">
+                    <template x-for="c in (disclosureData.checks_by_ai || [])" :key="c">
+                        <li x-text="c"></li>
+                    </template>
+                </ul>
+            </div>
+
+            <div class="disclosure-section card mb-2">
+                <h3>🔒 Data Handling</h3>
+                <p class="text-sm" x-text="disclosureData.data_handling || ''"></p>
+            </div>
+
+            <div class="disclosure-section card mb-2">
+                <h3>👥 Human in the Loop</h3>
+                <p class="text-sm" x-text="disclosureData.human_in_loop || ''"></p>
+            </div>
+
+            <div class="disclosure-section card mb-2">
+                <h3>⚠️ Limitations</h3>
+                <p class="text-sm" x-text="disclosureData.limitations || ''"></p>
+            </div>
+
+            <div class="disclosure-section card mb-2" x-show="disclosureData.services">
+                <h3>🔧 External Services</h3>
+                <template x-for="s in (disclosureData.services || [])" :key="s.name">
+                    <div class="mb-1" style="padding:0.5rem 0;border-bottom:1px solid var(--border-glass)">
+                        <strong x-text="s.name" style="color:var(--text-primary)"></strong>
+                        <span class="text-muted text-sm" x-text="' — ' + s.provider"></span>
+                        <p class="text-xs text-muted mt-1" x-text="s.purpose"></p>
+                    </div>
+                </template>
+            </div>
+
+            <div class="disclosure-section card">
+                <h3>🛠️ Development</h3>
+                <p class="text-sm" x-text="disclosureData.development || ''"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ Edit Modal ═══ -->
+    <div class="modal-backdrop" x-show="showEditModal" x-cloak @click.self="showEditModal = false">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>✏️ Edit Finding</h3>
+                <button class="modal-close" @click="showEditModal = false" aria-label="Close">×</button>
+            </div>
+            <p class="text-sm text-muted mb-1" x-text="editFinding ? editFinding.explanation : ''"></p>
+            <div class="finding-suggestion mb-1" x-show="editFinding && editFinding.suggestion">
+                💡 Suggestion: <span x-text="editFinding ? editFinding.suggestion : ''"></span>
+            </div>
+            <label for="edit-text">Your revised text</label>
+            <textarea id="edit-text" x-model="editText" rows="3"></textarea>
+            <div class="flex gap-1 mt-1 justify-between">
+                <button class="btn btn-ghost btn-sm" @click="showEditModal = false">Cancel</button>
+                <button class="btn btn-primary btn-sm" @click="submitEdit()" :disabled="!editText.trim()">Save Edit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ Dispute Modal ═══ -->
+    <div class="modal-backdrop" x-show="showDisputeModal" x-cloak @click.self="showDisputeModal = false">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>⚡ Dispute Finding</h3>
+                <button class="modal-close" @click="showDisputeModal = false" aria-label="Close">×</button>
+            </div>
+            <p class="text-sm text-muted mb-1" x-text="disputeFinding ? disputeFinding.explanation : ''"></p>
+            <label for="dispute-reason">Why do you disagree? (required)</label>
+            <textarea id="dispute-reason" x-model="disputeReason" rows="3" placeholder="Explain why this finding should not apply..."></textarea>
+            <div class="flex gap-1 mt-1 justify-between">
+                <button class="btn btn-ghost btn-sm" @click="showDisputeModal = false">Cancel</button>
+                <button class="btn btn-warning btn-sm" @click="submitDispute()" :disabled="!disputeReason.trim()">Submit Dispute</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ Override Modal ═══ -->
+    <div class="modal-backdrop" x-show="showOverrideModal" x-cloak @click.self="showOverrideModal = false">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>⚠️ Pending Findings</h3>
+                <button class="modal-close" @click="showOverrideModal = false" aria-label="Close">×</button>
+            </div>
+            <p class="text-sm text-muted mb-1" x-text="overrideMessage"></p>
+            <label for="override-reason">Override reason (required to approve)</label>
+            <textarea id="override-reason" x-model="overrideReason" rows="3" placeholder="Explain why you're approving despite pending findings..."></textarea>
+            <div class="flex gap-1 mt-1 justify-between">
+                <button class="btn btn-ghost btn-sm" @click="showOverrideModal = false">Cancel</button>
+                <button class="btn btn-success btn-sm" @click="submitOverride()" :disabled="!overrideReason.trim()">Approve Anyway</button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
