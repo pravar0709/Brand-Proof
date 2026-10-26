@@ -6,7 +6,7 @@
 **Track:** Full-Stack Product Engineering  
 **Participant:** Pravar Upadhyay (UPES, Dehradun | 4th Year B.Tech CSE Data Science)  
 **Email:** pravarupadhyay174@gmail.com | **Phone:** +91 78209 94075  
-**Live Project Link:** [https://brandproof.onrender.com](https://brandproof.onrender.com) (or local: `http://localhost:8000`)  
+**Live Project Link:** [https://brand-proof.onrender.com](https://brand-proof.onrender.com) (or local: `http://localhost:8000`)  
 **Source Code Repository:** [https://github.com/pravar0709/Brand-Proof](https://github.com/pravar0709/Brand-Proof)  
 **Test Suite:** 22/22 passing (`pytest tests/test_brandproof.py -v`)
 
