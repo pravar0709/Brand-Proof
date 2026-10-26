@@ -25,9 +25,20 @@ MEDICAL_WORDS = [
 
 
 def _build_pattern(words: List[str]) -> re.Pattern:
-    """Build a combined regex pattern with word boundaries."""
-    combined = "|".join(words)
-    return re.compile(r'\b(' + combined + r')\b', re.IGNORECASE)
+    """Build a combined regex pattern with word boundaries.
+    Handles special chars like # that don't work with \\b."""
+    # Separate patterns that start with non-word chars (like #)
+    special = [w for w in words if not w[0].isalnum()]
+    normal = [w for w in words if w[0].isalnum()]
+
+    parts = []
+    if normal:
+        parts.append(r'\b(' + "|".join(normal) + r')\b')
+    if special:
+        parts.append(r'(?:^|(?<=\s)|(?<=^))(' + "|".join(special) + r')(?=\s|$|[.,!?;:])')
+
+    combined = "|".join(parts)
+    return re.compile(combined, re.IGNORECASE | re.MULTILINE)
 
 
 SUPERLATIVE_PATTERN = _build_pattern(SUPERLATIVE_WORDS)
