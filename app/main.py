@@ -25,12 +25,47 @@ from app.routes.workflow import router as workflow_router
 from app.routes.disclosure import router as disclosure_router
 
 
+import asyncio
+import httpx as _httpx
+import logging
+
+_logger = logging.getLogger(__name__)
+
+# Self-ping interval (seconds) – keeps Render free-tier awake
+_SELF_PING_INTERVAL = 13 * 60  # 13 minutes
+
+
+async def _self_ping():
+    """Background task: ping own /healthz every 13 min to prevent Render cold starts."""
+    # Only run on Render (RENDER env var is auto-set by Render)
+    render_url = os.environ.get("RENDER_EXTERNAL_URL", "")
+    if not render_url:
+        _logger.info("Not on Render — self-ping disabled")
+        return
+
+    healthz_url = f"{render_url}/healthz"
+    _logger.info(f"Self-ping enabled → {healthz_url} every {_SELF_PING_INTERVAL}s")
+
+    while True:
+        await asyncio.sleep(_SELF_PING_INTERVAL)
+        try:
+            async with _httpx.AsyncClient(timeout=10) as client:
+                resp = await client.get(healthz_url)
+                _logger.debug(f"Self-ping: {resp.status_code}")
+        except Exception as e:
+            _logger.warning(f"Self-ping failed: {e}")
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Startup: create tables, seed data."""
+    """Startup: create tables, seed data, start keep-alive ping."""
     create_tables()
     seed_database()
+    # Launch self-ping background task
+    ping_task = asyncio.create_task(_self_ping())
     yield
+    ping_task.cancel()
+
 
 
 app = FastAPI(

@@ -12,4 +12,6 @@ services:
         sync: false
       - key: SECRET_KEY
         generateValue: true
+      - key: RENDER_EXTERNAL_URL
+        value: https://brand-proof.onrender.com
     healthCheckPath: /healthz
