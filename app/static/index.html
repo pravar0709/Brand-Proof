@@ -60,51 +60,145 @@
 
     <!-- ═══ Landing Page ═══ -->
     <div x-show="!user" class="landing">
-        <h1>BrandProof</h1>
-        <p class="tagline">Cite-or-Abstain brand governance. Every finding is backed by your rules — or flagged for human review.</p>
-
-        <div class="role-buttons">
-            <button class="role-btn" @click="login('creator')" id="btn-try-creator">
-                <span class="role-icon">✏️</span>
-                <span class="role-name">Try as Creator</span>
-                <span class="role-desc">Submit & review content</span>
-            </button>
-            <button class="role-btn" @click="login('manager')" id="btn-try-manager">
-                <span class="role-icon">⚙️</span>
-                <span class="role-name">Try as Manager</span>
-                <span class="role-desc">Manage rules & ledger</span>
-            </button>
-            <button class="role-btn" @click="login('reviewer')" id="btn-try-reviewer">
-                <span class="role-icon">✅</span>
-                <span class="role-name">Try as Reviewer</span>
-                <span class="role-desc">Approve submissions</span>
-            </button>
+        <!-- Animated background orbs -->
+        <div class="landing-orbs" aria-hidden="true">
+            <div class="orb orb-1"></div>
+            <div class="orb orb-2"></div>
+            <div class="orb orb-3"></div>
+            <div class="orb orb-4"></div>
         </div>
 
-        <div class="how-it-works">
-            <div class="how-step">
-                <div class="step-num">1</div>
-                <h3>Submit Draft</h3>
-                <p>Paste your content or upload a DOCX file</p>
+        <!-- Grid pattern overlay -->
+        <div class="landing-grid" aria-hidden="true"></div>
+
+        <!-- Hero content -->
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="hero-badge-dot"></span>
+                AI-Powered Brand Governance
             </div>
-            <div class="how-step">
-                <div class="step-num">2</div>
-                <h3>Auto-Check</h3>
-                <p>Rules, Ledger & AI verify every claim</p>
+
+            <h1>BrandProof</h1>
+            <p class="tagline">Cite-or-Abstain brand governance. Every finding is backed by your rules — or honestly flagged for human review. No guessing. No hallucination.</p>
+
+            <!-- Live stats -->
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="hero-stat-num">11</span>
+                    <span class="hero-stat-label">Rule Checks</span>
+                </div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat">
+                    <span class="hero-stat-num">22</span>
+                    <span class="hero-stat-label">Tests Passing</span>
+                </div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat">
+                    <span class="hero-stat-num">0%</span>
+                    <span class="hero-stat-label">Hallucination</span>
+                </div>
             </div>
-            <div class="how-step">
-                <div class="step-num">3</div>
-                <h3>Review & Decide</h3>
-                <p>Accept, edit, or dispute each finding</p>
-            </div>
-            <div class="how-step">
-                <div class="step-num">4</div>
-                <h3>Approve</h3>
-                <p>Reviewer signs off on compliant content</p>
+
+            <!-- Role selection cards -->
+            <div class="role-buttons">
+                <button class="role-btn" @click="login('creator')" id="btn-try-creator">
+                    <div class="role-btn-glow"></div>
+                    <span class="role-icon">✏️</span>
+                    <span class="role-name">Try as Creator</span>
+                    <span class="role-desc">Submit & review content</span>
+                    <span class="role-arrow">→</span>
+                </button>
+                <button class="role-btn" @click="login('manager')" id="btn-try-manager">
+                    <div class="role-btn-glow"></div>
+                    <span class="role-icon">⚙️</span>
+                    <span class="role-name">Try as Manager</span>
+                    <span class="role-desc">Manage rules & ledger</span>
+                    <span class="role-arrow">→</span>
+                </button>
+                <button class="role-btn" @click="login('reviewer')" id="btn-try-reviewer">
+                    <div class="role-btn-glow"></div>
+                    <span class="role-icon">✅</span>
+                    <span class="role-name">Try as Reviewer</span>
+                    <span class="role-desc">Approve submissions</span>
+                    <span class="role-arrow">→</span>
+                </button>
             </div>
         </div>
 
-        <p class="text-xs text-muted mt-3">
+        <!-- How it works (enhanced) -->
+        <div class="how-section">
+            <h2 class="how-section-title">How It Works</h2>
+            <div class="how-it-works">
+                <div class="how-step">
+                    <div class="step-num">1</div>
+                    <div class="how-step-connector"></div>
+                    <h3>Submit Draft</h3>
+                    <p>Paste your content or upload a DOCX file</p>
+                </div>
+                <div class="how-step">
+                    <div class="step-num">2</div>
+                    <div class="how-step-connector"></div>
+                    <h3>Auto-Check</h3>
+                    <p>11 deterministic rules + AI verify every claim</p>
+                </div>
+                <div class="how-step">
+                    <div class="step-num">3</div>
+                    <div class="how-step-connector"></div>
+                    <h3>Review & Decide</h3>
+                    <p>Accept, edit, or dispute each finding</p>
+                </div>
+                <div class="how-step">
+                    <div class="step-num">4</div>
+                    <h3>Approve</h3>
+                    <p>Reviewer signs off on compliant content</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature highlights -->
+        <div class="feature-highlights">
+            <div class="feature-card">
+                <div class="feature-icon">🛡️</div>
+                <h3>Cite or Abstain</h3>
+                <p>Every finding cites its exact source. If no evidence exists, we say so honestly.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔬</div>
+                <h3>11 Deterministic Checks</h3>
+                <p>Banned terms, claims, numbers, tone, accessibility — all verified locally, zero API cost.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🧠</div>
+                <h3>AI + Quote Verification</h3>
+                <p>LLM findings are verified against source text. Fabricated quotes are auto-downgraded.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📋</div>
+                <h3>Living Claim Ledger</h3>
+                <p>Approved facts with expiry dates. Outdated claims are flagged before publication.</p>
+            </div>
+        </div>
+
+        <!-- Trust badges -->
+        <div class="trust-badges">
+            <div class="trust-badge">
+                <span>FastAPI</span>
+            </div>
+            <div class="trust-badge">
+                <span>scikit-learn</span>
+            </div>
+            <div class="trust-badge">
+                <span>Alpine.js</span>
+            </div>
+            <div class="trust-badge">
+                <span>SQLite</span>
+            </div>
+            <div class="trust-badge">
+                <span>Gemini / Claude</span>
+            </div>
+        </div>
+
+        <p class="text-xs text-muted mt-3" style="position:relative;z-index:2">
             <a href="#" @click.prevent="loginThenDisclosure()">How we use AI →</a>
         </p>
     </div>
