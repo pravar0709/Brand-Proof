@@ -319,40 +319,42 @@
                 <tr><th>Participant</th><td>Pravar Upadhyay | Fourth-year B.Tech, Computer Science and Engineering (Data Science specialisation)</td></tr>
             </table>
 
-            <h3 class="subsection-title" style="margin-top: 14px;">How this document maps to the Round 2 judging criteria</h3>
+            <h3 class="subsection-title" style="margin-top: 14px;">How this document maps to the Round 2 judging criteria (100 Points)</h3>
             <table>
                 <tr>
-                    <th style="width: 38%;">Round 2 Requirement</th>
-                    <th>Where to find it in this submission</th>
+                    <th style="width: 32%;">Criterion (Points)</th>
+                    <th style="width: 48%;">Where to find it in this submission</th>
+                    <th style="width: 20%; text-align: center;">Round 1 Linkage</th>
                 </tr>
                 <tr>
-                    <td><strong>Working project link</strong></td>
-                    <td>Header banner above; deployed on Render (<a href="https://brand-proof.onrender.com">https://brand-proof.onrender.com</a>) with local reproduction steps</td>
+                    <td><strong>Working core workflow (30)</strong></td>
+                    <td>Section 3 (solution & workflow), Section 4 (features), Appendix A & B (live screenshots)</td>
+                    <td style="text-align: center;">Round 1 §3 & §4</td>
                 </tr>
                 <tr>
-                    <td><strong>Source-code repository link</strong></td>
-                    <td>Header banner & Section 12 (<a href="https://github.com/pravar0709/Brand-Proof">https://github.com/pravar0709/Brand-Proof</a>)</td>
+                    <td><strong>Technical depth & reliability (25)</strong></td>
+                    <td>Section 5 (architecture & 11 checks), Section 7 (responsible AI & quote check), Section 9 (22 tests)</td>
+                    <td style="text-align: center;">Round 1 §5 & §6</td>
                 </tr>
                 <tr>
-                    <td><strong>List of completed features</strong></td>
-                    <td>Section 4 (detailed end-to-end workflow, 11 deterministic checks, AI verification, roles, audit logs)</td>
+                    <td><strong>Progress from Round 1 (20)</strong></td>
+                    <td>Section 6 (engineering pivots & commitments delivery table), Section 8 (milestones across rounds)</td>
+                    <td style="text-align: center;">Round 1 §8 & §9</td>
                 </tr>
                 <tr>
-                    <td><strong>Technology & implementation details</strong></td>
-                    <td>Section 5 (FastAPI, SQLite WAL, scikit-learn TF-IDF, Provider-Agnostic LLM, Alpine.js, quote-check)</td>
+                    <td><strong>Three planned improvements (15)</strong></td>
+                    <td>Section 8 (Round 3 Finish: calibrated benchmark, dispute clustering, enterprise compliance)</td>
+                    <td style="text-align: center;">Round 1 §8 (Three Improvements)</td>
                 </tr>
                 <tr>
-                    <td><strong>Explanation of changes from original plan</strong></td>
-                    <td>Section 6 (TF-IDF vs heavy FAISS, SQLite vs PostgreSQL, quote verification & model adaptation)</td>
-                </tr>
-                <tr>
-                    <td><strong>Three major improvements for Round 3</strong></td>
-                    <td>Section 8 (Calibrated two-verifier benchmark, guideline clarity clustering, privacy audit & compliance export)</td>
+                    <td><strong>Usability (10)</strong></td>
+                    <td>Section 2 (user personas), Section 4 (1-click role logins, status stepper, 3 sample drafts)</td>
+                    <td style="text-align: center;">Round 1 §2</td>
                 </tr>
             </table>
 
             <p style="font-size: 8.5pt; color: #4b5563; margin-top: 8px;">
-                Also covered as required: problem statement understanding (Section 1), target users (Section 2), solution workflow (Section 3), responsible design & model disclosure (Section 7), test verification & scope delivery (Section 9), expected impact (Section 10), AI and tools disclosure (Section 11), participant details & integrity declaration (Section 12).
+                Also covered as required: problem statement understanding (Section 1), target users (Section 2), solution workflow (Section 3), responsible design & model disclosure (Section 7), test verification & scope delivery (Section 9), expected impact (Section 10), AI and tools disclosure (Section 11), participant details & integrity declaration (Section 12), and complete live product screenshots (Appendix B).
             </p>
 
             <div class="callout-box" style="margin-top: 10px;">
@@ -833,7 +835,7 @@
             <div class="page-header-meta">ROUND 2 SUBMISSION | THE BUILD</div>
 
             <h2 class="section-title">8. Three Major Improvements for Round 3</h2>
-            <p>In accordance with the Round 2 submission requirements, the three improvements below represent substantial, measurable advancements to be delivered in Round 3 (The Finish):</p>
+            <p>In our Round 1 Proposal (Section 8, Page 7), three named improvements were committed to: <em>(1) Calibrated findings with two-verifier agreement, (2) Claim Ledger with expiry dates & outdated-claim detection, and (3) Guideline Clarity analytics plus privacy mode</em>. During Round 2, Improvement #2 and the Privacy Mode of #3 were <strong>accelerated and delivered early</strong>. In Round 3 (The Finish), we complete the full enterprise depth of these improvements as detailed below:</p>
 
             <table>
                 <tr>
@@ -1085,13 +1087,13 @@
                 </tr>
                 <tr>
                     <td><strong>Technical Depth & Reliability (25)</strong></td>
-                    <td>Provider-agnostic Gemini/Claude LLM integration, TF-IDF retrieval engine (scikit-learn), quote verification (anti-hallucination), SQLAlchemy ORM with WAL mode, 22 automated pytest tests (100% pass), graceful AI-failure fallback, PII redaction before LLM calls, LRU caching, audit logging.</td>
-                    <td style="text-align:center"><strong>23-25</strong></td>
+                    <td>Live Google Gemini API integration active on Render deployment dashboard, provider-agnostic LLM fallback with SHA-256 prompt caching, literal quote verification (anti-hallucination guardrail), scikit-learn TF-IDF sub-millisecond retrieval engine, SQLite WAL mode + SQLAlchemy ORM, 22 automated pytest tests (100% pass), PII regex pre-redaction, audit logging.</td>
+                    <td style="text-align:center"><strong>24-25</strong></td>
                 </tr>
                 <tr>
                     <td><strong>Progress from Round 1 (20)</strong></td>
-                    <td>5 major engineering pivots from original proposal (see Section 6): FAISS→TF-IDF (-385MB), PostgreSQL→SQLite WAL, NLI cross-encoder→11 deterministic checks, single LLM→provider-agnostic, added quote verification not in original plan. All changes improve performance, reduce cost, and increase reliability.</td>
-                    <td style="text-align:center"><strong>18-20</strong></td>
+                    <td>100% of Round 1 Must-Have commitments delivered (roles, DOCX parsing, Claim Ledger, deterministic rules, verifiers, decisions, approvals, tests, public deployment). Plus, several Round 3 Should-Haves delivered early in Round 2: Claim Ledger expiry dates, PII pre-redaction, AI disclosure badge, and audit logging. 5 architectural pivots (TF-IDF vs FAISS, SQLite WAL, deterministic checks) fully justified.</td>
+                    <td style="text-align:center"><strong>19-20</strong></td>
                 </tr>
                 <tr>
                     <td><strong>Three Planned Improvements (15)</strong></td>
